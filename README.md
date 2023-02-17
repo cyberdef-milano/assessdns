@@ -1,6 +1,6 @@
 # ~$ assessdns
 
-`assessdns` is a shell script (legacy version of [@5amu](https://github.com/5amu) 's tool `dnshunter`) which checks for multiple and typical nameservers' misconfigurations.
+`assessdns` is a shell script which checks for multiple and typical nameservers' misconfigurations.
 
 To contextualize this tool here's the author blog post about the topics: [https://www.casalinovalerio.com/p/bgp-hijacking/](https://www.casalinovalerio.com/p/bgp-hijacking/).
 

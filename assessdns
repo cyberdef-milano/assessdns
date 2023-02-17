@@ -148,6 +148,30 @@ any_query()
     done; return $ret_code
 }
 
+### Open Resolver
+### https://simpledns.plus/kb/155/what-is-an-open-dns-server-and-how-do-i-fix-it
+###############################################################################
+
+open_resolver_msg()
+{
+    info "Recursing DNS queries might get the nameserver to partecipate to"
+    info "DNS Amplification Attacks, basically ddos attacks based on the fact"
+    info "that the answer given by the DNS is much larger that the request"
+    info "made by the host."
+}
+
+open_resolver()
+{
+    msg "[open_resolver] Checking if the DNS has recursion enabled"
+    ret_code=0
+    for ns in $NAMESERVERS; do
+        if dig +short test.openresolver.com TXT @"$ns" | grep open-resolver-detected &>/dev/null; then
+            warn "DNS $ns is recursing queries"
+            ret_code=1
+        fi
+    done; return $ret_code
+}
+
 ### DNS zone transfer checker
 ### https://www.iana.org/go/rfc1035
 ### https://www.rfc-editor.org/rfc/rfc5936.html
@@ -392,7 +416,7 @@ if [ -z "$NAMESERVERS" ]; then
     export NAMESERVERS="$( dig NS "$TARGET" +short | sed 's/\.$//g' | tr '\n' ' ' )"
 fi
 
-checks="soa_info zone_transfer any_query glue_record dnssec spf dmarc dkim geo"
+checks="soa_info zone_transfer any_query open_resolver glue_record dnssec spf dmarc dkim geo"
 for check in $checks; do
     if ${check} "${TARGET}"; then
         msg "No misconfiguration found"
